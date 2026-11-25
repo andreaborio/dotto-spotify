@@ -1,0 +1,21 @@
+<!doctype html>
+<!-- The Spotify login's way back to Dotto. Spotify only sends the code to an https address, Dotto lives on the house
+     WiFi with plain http: this static page (GitHub Pages) passes the code on to Dotto, found from the "state"
+     ("<random>~<Dotto's address>"), or dotto.local. Nothing is stored or sent anywhere else. -->
+<html lang=it><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>Dotto · Spotify</title>
+<style>body{font:17px/1.45 system-ui,-apple-system,sans-serif;background:#0b0b0b;color:#f2f2f0;max-width:30em;margin:2em auto;padding:0 1.2em}a{color:#8ccdff}</style>
+<h1>Spotify</h1>
+<p id=m>Torno da Dotto…</p>
+<script>
+const q = new URLSearchParams(location.search);
+const st = q.get("state") || "";
+const ip = st.includes("~") ? st.slice(st.lastIndexOf("~") + 1) : "";
+const host = /^\d{1,3}(\.\d{1,3}){3}$/.test(ip) ? ip : "dotto.local";
+const to = "http://" + host + "/spotify/callback" + location.search;
+if (q.has("code") || q.has("error")) location.replace(to);
+else document.getElementById("m").textContent = "Questa pagina serve solo a tornare da Dotto dopo il login.";
+document.getElementById("m").insertAdjacentHTML("afterend", '<p>Se non succede niente: <a id=l>apri Dotto</a> (il telefono deve essere sul WiFi di casa).</p>');
+document.getElementById("l").href = to;
+</script>
+</html>
